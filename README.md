@@ -1,10 +1,10 @@
-# 🤖 Gemini AI Conversational Chatbot
+# Gemini AI Conversational Chatbot
 
 A fast, low-latency AI chatbot running directly in your terminal, powered by the official Google Gen AI SDK (`google-genai`) and Google's Gemini models.
 
 ---
 
-## ✨ Features
+## Features
 
 - **Conversational AI:** Ask any question, debug code, brainstorm ideas, or have natural discussions.
 - **Fast Streaming Responses:** Tokens stream to your terminal in real-time as Gemini generates them.
@@ -15,7 +15,7 @@ A fast, low-latency AI chatbot running directly in your terminal, powered by the
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Prerequisites
 - Python 3.10+ installed on your system.
@@ -48,7 +48,7 @@ python BOT.py
 
 ---
 
-## 💬 In-Chat Commands
+## In-Chat Commands
 
 | Command | Action |
 |---|---|
@@ -58,6 +58,6 @@ python BOT.py
 
 ---
 
-## 🔒 Security
+## Security
 
 Your `.env` file containing your `GEMINI_API_KEY` is excluded via `.gitignore` and is never committed or pushed to Git.
