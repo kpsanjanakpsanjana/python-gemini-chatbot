@@ -6,6 +6,7 @@ Optimized for high-speed, low-latency streaming responses with google-genai SDK
 import os
 import sys
 
+# Ensure UTF-8 output encoding across Windows consoles to prevent UnicodeEncodeError with emojis
 if hasattr(sys.stdout, "reconfigure"):
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -17,6 +18,7 @@ if hasattr(sys.stdin, "reconfigure"):
     except Exception:
         pass
 
+# Load environment variables from .env file
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -40,8 +42,10 @@ FALLBACK_MODEL = "gemini-3.1-flash-lite"
 
 REQUEST_TIMEOUT_SECONDS = 90.0
 
+# Limit conversation history to the most recent 10 messages (5 user-assistant exchanges)
 MAX_HISTORY_MESSAGES = 10
 
+# Streamlined, concise system instruction to reduce prefill token processing time
 SYSTEM_INSTRUCTION = (
     "You are a helpful, fast, and concise AI conversational assistant. "
     "Provide clear, direct, and well-structured answers without unnecessary filler."
@@ -160,6 +164,7 @@ def chatbot():
     if not api_key:
         return
 
+    # Initialize Gemini client with configured HTTP timeout in milliseconds (90 seconds = 90,000 ms)
     try:
         timeout_ms = int(REQUEST_TIMEOUT_SECONDS * 1000)
         http_opts = types.HttpOptions(timeout=timeout_ms)
@@ -168,6 +173,7 @@ def chatbot():
         print(f"❌ Failed to initialize Gemini client: {e}")
         return
 
+    # Create multi-turn chat session
     current_model = DEFAULT_MODEL
     try:
         chat, current_model = create_chat_session(client, current_model)
@@ -177,6 +183,7 @@ def chatbot():
         print("Please check your API key and internet connection.\n")
         return
 
+    # Interactive Loop
     while True:
         try:
             user_input = input("You: ").strip()
@@ -184,15 +191,18 @@ def chatbot():
             print("\n\nGoodbye! Have a great day! 👋")
             break
 
+        # Ignore empty input
         if not user_input:
             continue
 
         lower_input = user_input.lower()
 
+        # Handle exit commands
         if lower_input in ("exit", "quit", "bye"):
             print("\nGoodbye! Have a great day! 👋")
             break
 
+        # Handle reset commands
         if lower_input in ("clear", "reset", "new"):
             try:
                 chat, current_model = create_chat_session(client, current_model)
@@ -201,10 +211,12 @@ def chatbot():
                 print(f"\n⚠️ Could not reset conversation: {e}\n")
             continue
 
+        # Handle help command
         if lower_input == "help":
             print_banner()
             continue
 
+        # Send message to Gemini and stream response in real-time
         print(f"\nGemini: ", end="", flush=True)
         try:
             _, chat, current_model = send_prompt(chat, client, current_model, user_input)
